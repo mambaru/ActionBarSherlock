@@ -13,7 +13,7 @@ import android.view.View.MeasureSpec;
 import android.view.View.OnTouchListener;
 import android.widget.*;
 import com.actionbarsherlock.R;
-import com.actionbarsherlock.widget.PopupWindow;
+import com.actionbarsherlock.widget.IcsPopupWindow;
 
 /**
  * A proxy between pre- and post-Honeycomb implementations of this class.
@@ -27,7 +27,7 @@ public class IcsListPopupWindow {
     private static final int EXPAND_LIST_TIMEOUT = 250;
 
     private Context mContext;
-    private PopupWindow mPopup;
+    private IcsPopupWindow mPopup;
     private ListAdapter mAdapter;
     private DropDownListView mDropDownList;
 
@@ -71,7 +71,7 @@ public class IcsListPopupWindow {
 
     public IcsListPopupWindow(Context context, AttributeSet attrs, int defStyleAttr) {
         mContext = context;
-        mPopup = new PopupWindow(context, attrs, defStyleAttr);
+        mPopup = new IcsPopupWindow(context, attrs, defStyleAttr);
         mPopup.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
     }
 
@@ -79,9 +79,9 @@ public class IcsListPopupWindow {
         mContext = context;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             Context wrapped = new ContextThemeWrapper(context, defStyleRes);
-            mPopup = new PopupWindow(wrapped, attrs, defStyleAttr);
+            mPopup = new IcsPopupWindow(wrapped, attrs, defStyleAttr);
         } else {
-            mPopup = new PopupWindow(context, attrs, defStyleAttr, defStyleRes);
+            mPopup = new IcsPopupWindow(context, attrs, defStyleAttr, defStyleRes);
         }
         mPopup.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
     }

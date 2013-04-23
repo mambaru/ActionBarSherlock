@@ -10,49 +10,49 @@ import android.view.ViewTreeObserver;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 
-public class PopupWindow extends android.widget.PopupWindow {
+public class IcsPopupWindow extends android.widget.PopupWindow {
 
-    public PopupWindow(Context context) {
+    public IcsPopupWindow(Context context) {
         super(context);
         fixScrollListenerNPE();
     }
 
-    public PopupWindow(Context context, AttributeSet attrs) {
+    public IcsPopupWindow(Context context, AttributeSet attrs) {
         super(context, attrs);
         fixScrollListenerNPE();
     }
 
-    public PopupWindow(Context context, AttributeSet attrs, int defStyle) {
+    public IcsPopupWindow(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         fixScrollListenerNPE();
     }
 
-    public PopupWindow(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public IcsPopupWindow(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         fixScrollListenerNPE();
     }
 
-    public PopupWindow() {
+    public IcsPopupWindow() {
         super();
         fixScrollListenerNPE();
     }
 
-    public PopupWindow(View contentView) {
+    public IcsPopupWindow(View contentView) {
         super(contentView);
         fixScrollListenerNPE();
     }
 
-    public PopupWindow(int width, int height) {
+    public IcsPopupWindow(int width, int height) {
         super(width, height);
         fixScrollListenerNPE();
     }
 
-    public PopupWindow(View contentView, int width, int height) {
+    public IcsPopupWindow(View contentView, int width, int height) {
         super(contentView, width, height);
         fixScrollListenerNPE();
     }
 
-    public PopupWindow(View contentView, int width, int height, boolean focusable) {
+    public IcsPopupWindow(View contentView, int width, int height, boolean focusable) {
         super(contentView, width, height, focusable);
         fixScrollListenerNPE();
     }
@@ -79,7 +79,7 @@ public class PopupWindow extends android.widget.PopupWindow {
                         }
                     }
                 };
-                listener.set(PopupWindow.this, newListener);
+                listener.set(IcsPopupWindow.this, newListener);
             } catch (Exception e) {
                 Log.e("MambaPopupWindow", "", e);
             }
