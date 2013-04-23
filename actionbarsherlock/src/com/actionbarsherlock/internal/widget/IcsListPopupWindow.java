@@ -8,12 +8,15 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.*;
 import android.view.View.MeasureSpec;
 import android.view.View.OnTouchListener;
 import android.widget.*;
 import com.actionbarsherlock.R;
-import com.actionbarsherlock.widget.IcsPopupWindow;
+
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
 
 /**
  * A proxy between pre- and post-Honeycomb implementations of this class.
@@ -27,7 +30,7 @@ public class IcsListPopupWindow {
     private static final int EXPAND_LIST_TIMEOUT = 250;
 
     private Context mContext;
-    private IcsPopupWindow mPopup;
+    private PopupWindow mPopup;
     private ListAdapter mAdapter;
     private DropDownListView mDropDownList;
 
@@ -71,19 +74,21 @@ public class IcsListPopupWindow {
 
     public IcsListPopupWindow(Context context, AttributeSet attrs, int defStyleAttr) {
         mContext = context;
-        mPopup = new IcsPopupWindow(context, attrs, defStyleAttr);
+        mPopup = new PopupWindow(context, attrs, defStyleAttr);
         mPopup.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+        preIcsPopupWindowHack(mPopup);
     }
 
     public IcsListPopupWindow(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         mContext = context;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             Context wrapped = new ContextThemeWrapper(context, defStyleRes);
-            mPopup = new IcsPopupWindow(wrapped, attrs, defStyleAttr);
+            mPopup = new PopupWindow(wrapped, attrs, defStyleAttr);
         } else {
-            mPopup = new IcsPopupWindow(context, attrs, defStyleAttr, defStyleRes);
+            mPopup = new PopupWindow(context, attrs, defStyleAttr, defStyleRes);
         }
         mPopup.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+        preIcsPopupWindowHack(mPopup);
     }
 
     public void setAdapter(ListAdapter adapter) {
@@ -647,6 +652,36 @@ public class IcsListPopupWindow {
                     !isInputMethodNotNeeded() && mPopup.getContentView() != null) {
                 mHandler.removeCallbacks(mResizePopupRunnable);
                 mResizePopupRunnable.run();
+            }
+        }
+    }
+
+    private void preIcsPopupWindowHack(final PopupWindow popupWindow) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            try {
+                final Field fAnchor = popupWindow.getClass().getDeclaredField("mAnchor");
+                fAnchor.setAccessible(true);
+                Field listener = popupWindow.getClass().getDeclaredField("mOnScrollChangedListener");
+                listener.setAccessible(true);
+                final ViewTreeObserver.OnScrollChangedListener originalListener = (ViewTreeObserver.OnScrollChangedListener) listener.get(popupWindow);
+                final ViewTreeObserver.OnScrollChangedListener newListener = new ViewTreeObserver.OnScrollChangedListener() {
+                    @Override
+                    public void onScrollChanged() {
+                        try {
+                            Log.e("MambaPopupWindow", "class: " + fAnchor.getDeclaringClass().getSimpleName());
+                            WeakReference mAnchor = (WeakReference) fAnchor.get(popupWindow);
+                            View anchor = mAnchor != null ? (View) mAnchor.get() : null;
+                            if (anchor != null) {
+                                originalListener.onScrollChanged();
+                            }
+                        } catch (IllegalAccessException ex) {
+                            Log.e("MambaPopupWindow", "", ex);
+                        }
+                    }
+                };
+                listener.set(popupWindow, newListener);
+            } catch (Exception e) {
+                Log.e("MambaPopupWindow", "", e);
             }
         }
     }
