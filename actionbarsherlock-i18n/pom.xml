@@ -9,7 +9,7 @@
   <parent>
     <groupId>com.actionbarsherlock</groupId>
     <artifactId>parent</artifactId>
-    <version>4.3.0</version>
+    <version>4.3.1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -44,6 +44,7 @@
         <groupId>org.holoeverywhere</groupId>
         <artifactId>resbuilder</artifactId>
         <configuration>
+          <androidSdkPath>${env.ANDROID_HOME}</androidSdkPath>
           <includeDirs>
             <dir>${project.basedir}</dir>
           </includeDirs>

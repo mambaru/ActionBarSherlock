@@ -1,8 +1,17 @@
 Change Log
 ===============================================================================
 
-Version 4.3.0 *(In Development)*
---------------------------------
+Version 4.3.1 *(2013-04-28)*
+----------------------------
+
+ * Fix: Importing library into Eclipse as a Maven module now works correctly.
+ * Prevent dispatching touch events to both action bar and content view on API
+   11 and up.
+ * Add Hebrew and Brazillian translations to i18n module.
+
+
+Version 4.3.0 *(2013-04-15)*
+----------------------------
 
  * New: FEST module for testing ActionBarSherlock classes.
  * New: i18n module for including internationalized strings used by actionbar.
